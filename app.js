@@ -175,7 +175,7 @@ app.post("/viewBlog",(req,res)=>{
     })
 })
 
-app.post("/viewBlog",(req,res)=>{
+app.post("/viewMyBlog",(req,res)=>{
     let token = req.headers["token"]
     jwt.verify(token,"blog-challenge-app",(error,decoded)=>{
         if (error) {
@@ -183,9 +183,18 @@ app.post("/viewBlog",(req,res)=>{
         } else {
             if(decoded)
                 {
-                    blogModel.find().then(
-                        (data)=>{
-                            res.json(data)
+                    userEmail = decoded.email
+                    userModel.findOne({"email":userEmail}).then(
+                        (response)=>{
+                            blogModel.find({"author":response.name}).then(
+                                (data)=>{
+                                    res.json(data)
+                                }
+                            ).catch(
+                                (error)=>{
+                                    res.json(error)
+                                }
+                            )
                         }
                     ).catch(
                         (error)=>{
