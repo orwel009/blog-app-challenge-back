@@ -130,6 +130,29 @@ app.post("/editBlog",(req,res)=>{
     })
 })
 
+app.post("/deleteBlog",(req,res)=>{
+    let token = req.headers["token"]
+    let blogId = req.body._id;
+    jwt.verify(token,"blog-challenge-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorized access"})
+        } else {
+            if(decoded)
+                {
+                    blogModel.findByIdAndDelete(blogId).then(
+                        (response)=>{
+                            res.json({"status":"success"})
+                        }
+                    ).catch(
+                        (error)=>{
+                            res.json(error)
+                        }
+                    )
+                }
+        }
+    })
+})
+
 
 app.listen(8080,()=>{
     console.log("Server Started")
