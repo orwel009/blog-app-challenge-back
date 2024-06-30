@@ -1,6 +1,7 @@
 const express=require("express")
 const mongoose=require("mongoose")
 const cors=require("cors")
+const bcryptjs = require("bcryptjs")
 
 const app = express()
 
@@ -32,7 +33,11 @@ app.post("/signup",async(req,res)=>{
                 res.json({"status":"success"})
             }
         }
-    ).catch()
+    ).catch(
+        (error)=>{
+            res.json(error)
+        }
+    )
 })
 
 
