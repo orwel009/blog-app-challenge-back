@@ -8,6 +8,8 @@ const app = express()
 
 const users = require("./models/user")
 const {userModel} = require("./models/user")
+const blogs = require("./models/blog")
+const {blogModel} = require("./models/blog")
 
 app.use(cors())
 app.use(express.json())
@@ -71,6 +73,37 @@ app.post("/signin",(req,res)=>{
         }
     )
 })
+
+app.post("/addBlog",(req,res)=>{
+    let token = req.headers["token"]
+    jwt.verify(token,"blog-challenge-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorized access"})
+        } else {
+            if(decoded)
+                {
+                    userEmail = decoded.email
+                    userModel.findOne({"email":userEmail}).then(
+                        (response)=>{
+                            const currentUser = response.name
+                            let input = req.body
+                            input.author=currentUser
+                            let blog = new blogModel(input)
+                            console.log(blog)
+                            blog.save()
+                            res.json({"status":"success"})
+                        }
+                    ).catch(
+                        (error)=>{
+                            res.json(error)
+                        }
+                    )
+                }
+        }
+    })
+})
+
+
 
 app.listen(8080,()=>{
     console.log("Server Started")
