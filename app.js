@@ -175,6 +175,28 @@ app.post("/viewBlog",(req,res)=>{
     })
 })
 
+app.post("/viewBlog",(req,res)=>{
+    let token = req.headers["token"]
+    jwt.verify(token,"blog-challenge-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorized access"})
+        } else {
+            if(decoded)
+                {
+                    blogModel.find().then(
+                        (data)=>{
+                            res.json(data)
+                        }
+                    ).catch(
+                        (error)=>{
+                            res.json(error)
+                        }
+                    )
+                }
+        }
+    })
+})
+
 
 app.listen(8080,()=>{
     console.log("Server Started")
