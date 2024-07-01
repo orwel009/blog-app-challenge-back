@@ -161,9 +161,27 @@ app.post("/viewBlog",(req,res)=>{
         } else {
             if(decoded)
                 {
-                    blogModel.find().then(
+                    let searchQuery = req.body.searchQuery || "";
+                
+                    // Define the search criteria
+                    let searchCriteria = {};
+                    if (searchQuery) {
+                        let searchRegex = new RegExp(searchQuery, "i"); // case-insensitive search
+                        searchCriteria = {
+                            $or: [
+                                { title: searchRegex },
+                                { content: searchRegex },
+                                { author: searchRegex }
+                            ]
+                        };
+                    }
+                    blogModel.find(searchCriteria).then(
                         (data)=>{
-                            res.json(data)
+                            if (data.length>0) {
+                                res.json(data)
+                            } else {
+                                res.json({"status":"No data found"})
+                            }
                         }
                     ).catch(
                         (error)=>{
