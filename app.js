@@ -31,7 +31,6 @@ app.post("/signup",async(req,res)=>{
                 res.json({"status":"email already exist"})
             } else {
                 let user = new users.userModel(input)
-                console.log(user)
                 user.save()
                 res.json({"status":"success"})
             }
