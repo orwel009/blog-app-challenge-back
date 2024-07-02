@@ -55,7 +55,7 @@ app.post("/signin",(req,res)=>{
                             if (error) {
                                 res.json({"status":"unable to create token"})
                             } else {
-                                res.json({"status":"succes","userId":response[0]._id,"token":token})
+                                res.json({"status":"success","userId":response[0]._id,"token":token})
                             }
                         })
                     } else {
