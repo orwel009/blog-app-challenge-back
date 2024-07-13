@@ -73,6 +73,7 @@ app.post("/signin",(req,res)=>{
     )
 })
 
+
 app.post("/addBlog",(req,res)=>{
     let token = req.headers["token"]
     jwt.verify(token,"blog-challenge-app",(error,decoded)=>{
@@ -88,7 +89,6 @@ app.post("/addBlog",(req,res)=>{
                             let input = req.body
                             input.author=currentUser
                             let blog = new blogModel(input)
-                            console.log(blog)
                             blog.save()
                             res.json({"status":"success"})
                         }
