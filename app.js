@@ -113,7 +113,6 @@ app.post("/editBlog",(req,res)=>{
                 {
                     blogModel.findOne({"_id":blogId}).then(
                         (response)=>{
-                            console.log(response)
                             Object.assign(response, req.body);
                             response.date = new Date()
                             response.save()
@@ -125,6 +124,28 @@ app.post("/editBlog",(req,res)=>{
                         }
                     )
                 }
+        }
+    })
+})
+
+app.post("/getEditBlog",(req,res)=>{
+    let token = req.headers["token"]
+    let blogId = req.body._id;
+    jwt.verify(token,"blog-challenge-app",(error,decoded)=>{
+        if (error) {
+            res.json({"status":"unauthorized access"})
+        } else {
+            if (decoded) {
+                blogModel.findOne({"_id":blogId}).then(
+                    (data)=>{
+                        res.json(data)
+                    }
+                ).catch(
+                    (error)=>{
+                        res.json(error)
+                    }
+                )
+            }
         }
     })
 })
